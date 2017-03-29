@@ -1,0 +1,41 @@
+package com.eaglesakura.alternet;
+
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
+import android.support.annotation.Nullable;
+
+/**
+ * ネットワーク状態のプロファイリングを行う
+ *
+ * StreamProxyで生成されたstream等、 {@link Result} をハンドリング可能なオブジェクトから参照される。
+ */
+public abstract class NetworkProfile {
+    /**
+     * サーバーに接続が完了するまでの時間
+     * 未接続の場合はnullを返却する
+     */
+    @Nullable
+    public abstract Integer getConnectionTimeMs();
+
+    /**
+     * ダウンロード完了までの時間
+     * ダウンロード未完了の場合はnullを返却する
+     */
+    @Nullable
+    public abstract Integer getTurnaroundTimeMs();
+
+    /**
+     * 平均現在のネットワーク速度を取得する
+     * これはレスポンスのダウンロード開始後にカウントされる。
+     * それまでは0bpsとなる
+     */
+    @FloatRange(from = 0)
+    public abstract float getNetworkSpeedMbps();
+
+    /**
+     * ダウンロードしたデータ容量を取得する
+     */
+    @Nullable
+    @IntRange(from = 0)
+    public abstract Long getDownloadDataBytes();
+}
