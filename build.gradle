@@ -1,11 +1,7 @@
 /**
- * 1.0.0   : release
- * 1.0.x   : Circle CIに移行
- * 1.1.x   : RxAndroidベースのスレッド処理に移行
- * 1.1.x   : GoogleHttpClient依存を削除
- * 1.2.x   : bintrayに移行
+ * 2.0.x   : `alternet`にライブラリ名変更
  */
-def ARTIFACT_VERSION = "1.2"
+def ARTIFACT_VERSION = "2.0"
 def REPOSITORY_NAME = "maven"
 def BINTRAY_LICENSES = ["MIT"]
 def BINTRAY_LABELS = ["android"]
@@ -81,17 +77,17 @@ dependencies {
     if (EGLIBRARY_COMPILE_LOCAL) {
         compile project(':eglibrary:json-wrapper')
         compile project(':eglibrary:android-text-kvs')
-        compile project(':eglibrary:android-simple-utils')
+        compile project(':eglibrary:android-commons')
 
         androidTestCompile project(":eglibrary:android-devicetest-support")
         testCompile project(":eglibrary:android-unittest-support")
     } else {
         compile "com.eaglesakura:json-wrapper:1.1.423"
-        compile "com.eaglesakura:android-text-kvs:2.1.447"
-        compile "com.eaglesakura:android-simple-utils:2.0.548"
+        compile "com.eaglesakura:android-commons:2.1.3"
+        compile "com.eaglesakura:android-text-kvs:2.2.450"
 
-        androidTestCompile "com.eaglesakura:android-devicetest-support:2.1.270"
-        testCompile "com.eaglesakura:android-unittest-support:1.4.206"
+        androidTestCompile "com.eaglesakura:android-devicetest-support:2.1.272"
+        testCompile "com.eaglesakura:android-unittest-support:1.4.207"
     }
 }
 
