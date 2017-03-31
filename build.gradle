@@ -40,7 +40,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 25
 
         // Device Test
