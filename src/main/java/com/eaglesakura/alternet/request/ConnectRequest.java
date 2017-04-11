@@ -5,7 +5,10 @@ import com.eaglesakura.alternet.HttpHeader;
 import com.eaglesakura.alternet.RetryPolicy;
 import com.eaglesakura.alternet.cache.CachePolicy;
 
+import android.support.annotation.Keep;
+
 public abstract class ConnectRequest {
+    @Keep
     public enum Method {
         GET {
             @Override
