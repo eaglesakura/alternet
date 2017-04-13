@@ -14,9 +14,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class SimpleHttpRequest extends ConnectRequest {
-    private Map<String, String> params = new HashMap<>();
+    private Map<String, String> mParams = new HashMap<>();
 
-    private String encoding = "UTF-8";
+    private String mEncoding = "UTF-8";
 
     private CachePolicy mCachePolicy = new CachePolicy();
 
@@ -31,22 +31,22 @@ public class SimpleHttpRequest extends ConnectRequest {
     public void setUrl(String url, Map<String, String> params) {
         this.url = url;
         if (params != null) {
-            this.params = params;
+            this.mParams = params;
         }
     }
 
     private String encodeParams() {
-        if (params == null || params.isEmpty()) {
+        if (mParams == null || mParams.isEmpty()) {
             return "";
         }
         StringBuilder result = new StringBuilder();
-        Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> iterator = mParams.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> entry = iterator.next();
             try {
-                result.append(URLEncoder.encode(entry.getKey(), encoding));
+                result.append(URLEncoder.encode(entry.getKey(), mEncoding));
                 result.append('=');
-                result.append(URLEncoder.encode(entry.getValue(), encoding));
+                result.append(URLEncoder.encode(entry.getValue(), mEncoding));
                 result.append('&');
             } catch (Exception e) {
 
@@ -57,25 +57,21 @@ public class SimpleHttpRequest extends ConnectRequest {
 
     @Override
     public String getUrl() {
-        if (getMethod() == Method.GET) {
-            String params = encodeParams();
-            if (StringUtil.isEmpty(params)) {
-                // パラメータが無いのでそのまま返す
-                return this.url;
-            }
-
-            // URLにパラメータを乗せる
-            StringBuilder result = new StringBuilder(this.url);
-            if (url.indexOf("?") < 0) {
-                result.append('?');
-            } else {
-                result.append('&');
-            }
-            result.append(params);
-            return result.toString();
-        } else {
-            return url;
+        String params = encodeParams();
+        if (StringUtil.isEmpty(params)) {
+            // パラメータが無いのでそのまま返す
+            return this.url;
         }
+
+        // URLにパラメータを乗せる
+        StringBuilder result = new StringBuilder(this.url);
+        if (url.indexOf("?") < 0) {
+            result.append('?');
+        } else {
+            result.append('&');
+        }
+        result.append(params);
+        return result.toString();
     }
 
     @Override
@@ -118,7 +114,7 @@ public class SimpleHttpRequest extends ConnectRequest {
 
             @Override
             public String getContentType() {
-                return "application/x-www-form-urlencoded; charset=" + encoding;
+                return "application/x-www-form-urlencoded; charset=" + mEncoding;
             }
         };
     }
