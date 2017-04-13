@@ -49,7 +49,7 @@ public class SimpleHttpRequestTest extends UnitTestCase {
             Map<String, String> values = new HashMap<>();
             values.put("key", "value");
             req.setUrl("https://example.com", values);
-            assertEquals(req.getUrl(), "https://example.com");
+            assertEquals(req.getUrl(), "https://example.com?key=value&");
         }
     }
 
