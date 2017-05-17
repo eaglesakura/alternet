@@ -2,6 +2,7 @@ package com.eaglesakura.alternet.error;
 
 import com.eaglesakura.alternet.internal.CallbackHolder;
 import com.eaglesakura.alternet.request.ConnectRequest;
+import com.eaglesakura.io.CancelableInputStream;
 import com.eaglesakura.json.JSON;
 
 import android.annotation.SuppressLint;
@@ -10,7 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.net.HttpURLConnection;
 
 public class HttpStatusException extends IOException {
@@ -61,18 +61,11 @@ public class HttpStatusException extends IOException {
 
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try (
-                InputStream is = connection.getErrorStream()
-        ) {
+        try (InputStream is = new CancelableInputStream(connection.getErrorStream(), () -> holder.isCanceled())) {
             // バッファを全て読み取る
             int length;
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
-
-                // キャンセルされた
-                if (holder.isCanceled()) {
-                    throw new InterruptedIOException();
-                }
             }
         }
 

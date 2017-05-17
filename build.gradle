@@ -1,7 +1,7 @@
 /**
  * 2.0.x   : `alternet`にライブラリ名変更
  */
-def ARTIFACT_VERSION = "2.0"
+def ARTIFACT_VERSION = "2.1"
 def REPOSITORY_NAME = "maven"
 def BINTRAY_LICENSES = ["MIT"]
 def BINTRAY_LABELS = ["android"]
@@ -13,7 +13,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'me.tatarka:gradle-retrolambda:3.5.0' // support Lambda
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'

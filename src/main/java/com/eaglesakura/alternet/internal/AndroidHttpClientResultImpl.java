@@ -1,9 +1,7 @@
 package com.eaglesakura.alternet.internal;
 
-import com.eaglesakura.android.db.DBOpenType;
-import com.eaglesakura.android.db.TextKeyValueStore;
-import com.eaglesakura.alternet.HttpHeader;
 import com.eaglesakura.alternet.Alternet;
+import com.eaglesakura.alternet.HttpHeader;
 import com.eaglesakura.alternet.cache.ICacheWriter;
 import com.eaglesakura.alternet.error.HttpAccessFailedException;
 import com.eaglesakura.alternet.error.HttpStatusException;
@@ -11,6 +9,8 @@ import com.eaglesakura.alternet.error.InternalServerErrorException;
 import com.eaglesakura.alternet.parser.RequestParser;
 import com.eaglesakura.alternet.request.ConnectContent;
 import com.eaglesakura.alternet.request.ConnectRequest;
+import com.eaglesakura.android.db.DBOpenType;
+import com.eaglesakura.android.db.TextKeyValueStore;
 import com.eaglesakura.util.CollectionUtil;
 import com.eaglesakura.util.IOUtil;
 import com.eaglesakura.util.StringUtil;
@@ -92,12 +92,13 @@ public class AndroidHttpClientResultImpl<T> extends HttpResult<T> {
     }
 
     private void writeContents(CallbackHolder<T> callback, HttpURLConnection connection) throws IOException {
-        if (!mRequest.getMethod().hasContent()) {
-            // メソッドによっては不要である
+        ConnectContent content = mRequest.getContent();
+
+        // 送信コンテンツが無い
+        if (content == null) {
             return;
         }
 
-        ConnectContent content = mRequest.getContent();
         long length = content.getLength();
         if (length <= 0) {
             // no content

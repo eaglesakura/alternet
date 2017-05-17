@@ -25,7 +25,7 @@ public class FileCacheController implements CacheController {
     public FileCacheController(File dir) throws IOException {
         this.mCacheDirectory = IOUtil.mkdirs(dir);
         if (!dir.isDirectory()) {
-            throw new FileNotFoundException("Directory not found");
+            throw new FileNotFoundException("Directory not found :: " + dir.getAbsolutePath());
         }
     }
 

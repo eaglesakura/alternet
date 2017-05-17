@@ -113,7 +113,7 @@ public class SimplePostRequest extends ConnectRequest {
                     return mContentType;
                 }
             };
-        } else {
+        } else if (mPostFile != null) {
             final long length = mPostFile.length();
             return new ConnectContent() {
                 @Override
@@ -131,6 +131,8 @@ public class SimplePostRequest extends ConnectRequest {
                     return mContentType;
                 }
             };
+        } else {
+            return null;
         }
     }
 }

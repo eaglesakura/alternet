@@ -100,6 +100,10 @@ public class SimpleHttpRequest extends ConnectRequest {
     @Override
     public ConnectContent getContent() {
         String paramString = encodeParams();
+        if (StringUtil.isEmpty(paramString)) {
+            return null;
+        }
+
         final byte[] paramStringBytes = paramString.getBytes();
         return new ConnectContent() {
             @Override

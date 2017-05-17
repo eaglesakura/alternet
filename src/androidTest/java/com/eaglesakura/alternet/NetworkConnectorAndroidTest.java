@@ -8,7 +8,6 @@ import com.eaglesakura.alternet.request.SimpleHttpRequest;
 import com.eaglesakura.alternet.stream.ByteArrayStreamController;
 import com.eaglesakura.android.devicetest.DeviceTestCase;
 import com.eaglesakura.android.util.AndroidThreadUtil;
-import com.eaglesakura.util.CollectionUtil;
 import com.eaglesakura.util.IOUtil;
 
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import android.graphics.Bitmap;
 
 import java.io.File;
-import java.util.Arrays;
 
 import junit.framework.Assert;
 
@@ -36,7 +34,8 @@ public class NetworkConnectorAndroidTest extends DeviceTestCase {
 
         Alternet connector = Alternet.newLargeBinaryInstance(getContext(), cacheDirectory);
         SimpleHttpRequest request = new SimpleHttpRequest(ConnectRequest.Method.GET);
-        request.setUrl("https://http.cat/200", CollectionUtil.asPairMap(Arrays.asList("ThisIs", "UnitTest"), it -> it));
+//        request.setUrl("https://http.cat/200", CollectionUtil.asPairMap(Arrays.asList("ThisIs", "UnitTest"), it -> it));
+        request.setUrl("https://http.cat/200", null);
         request.setReadTimeoutMs(1000 * 30);
         request.setConnectTimeoutMs(1000 * 30);
         request.getCachePolicy().setCacheLimitTimeMs(0);
