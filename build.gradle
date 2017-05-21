@@ -61,19 +61,19 @@ if (!hasProperty("EGLIBRARY_COMPILE_LOCAL")) {
 
 dependencies {
     if (EGLIBRARY_COMPILE_LOCAL) {
-        implementation project(':eglibrary:json-wrapper')
+        compile project(':eglibrary:json-wrapper')
         implementation project(':eglibrary:android-text-kvs')
         implementation project(':eglibrary:android-commons')
 
         androidTestImplementation project(":eglibrary:android-devicetest-support")
         testImplementation project(":eglibrary:android-unittest-support")
     } else {
-        implementation "com.eaglesakura:json-wrapper:1.1.423"
-        implementation "com.eaglesakura:android-commons:2.1.3"
-        implementation "com.eaglesakura:android-text-kvs:2.2.450"
+        compile "com.eaglesakura:json-wrapper:1.1.423"
+        compile "com.eaglesakura:android-commons:2.2.11"
+        compile "com.eaglesakura:android-text-kvs:2.3.452"
 
-        androidTestImplementation "com.eaglesakura:android-devicetest-support:2.1.272"
-        testImplementation "com.eaglesakura:android-unittest-support:1.4.207"
+        androidTestCompile "com.eaglesakura:android-devicetest-support:2.2.275"
+        testCompile "com.eaglesakura:android-unittest-support:1.5.211"
     }
 }
 
@@ -93,7 +93,8 @@ android.libraryVariants.all { variant ->
         source = variant.javaCompile.source
         ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
 
-        classpath = files(variant.javaCompile.classpath.files) +
+        classpath =
+//                files(variant.javaCompile.classpath.files) +
                 files(ext.androidJar) +
                 files("build/intermediates/classes/${variant.name}/") +
                 fileTree("build/intermediates/exploded-aar").include("**/*.jar")
