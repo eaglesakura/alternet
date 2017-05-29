@@ -1,10 +1,10 @@
 package com.eaglesakura.alternet.internal;
 
 import com.eaglesakura.alternet.cache.ICacheWriter;
+import com.eaglesakura.io.CancelableInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
@@ -17,28 +17,17 @@ public class NetworkParseInputStream extends DigestInputStream {
      * キャンセルを細かい単位で行えるように、ある程度以上は一度に読み込めないようにする。
      */
     private static final int MAX_READ_BYTES = 1024 * 4;
+    private final ICacheWriter mCacheWriter;
 
-    final CallbackHolder mCallback;
-
-    final ICacheWriter mCacheWriter;
-
-    final NetworkProfileImpl mProfile;
+    private final NetworkProfileImpl mProfile;
 
     public NetworkParseInputStream(InputStream stream, NetworkProfileImpl profile, ICacheWriter cacheWriter, MessageDigest digest, CallbackHolder callback) {
-        super(stream, digest);
-        mCallback = callback;
+        super(new CancelableInputStream(stream, () -> callback.isCanceled()), digest);
         mCacheWriter = cacheWriter;
         mProfile = profile;
     }
 
-    private void throwIfCanceled() throws IOException {
-        if (mCallback.isCanceled()) {
-            throw new InterruptedIOException("task canceled");
-        }
-    }
-
     private void onDownloadStep(byte[] buffer, int offset, int length) throws IOException {
-
         mProfile.onDownloadStep(length);
 
         if (mCacheWriter == null || length <= 0) {
@@ -51,7 +40,9 @@ public class NetworkParseInputStream extends DigestInputStream {
     @Override
     public int read() throws IOException {
         byte[] buf = new byte[1];
-        read(buf, 0, 1);
+        if (read(buf, 0, 1) < 0) {
+            return -1;
+        }
         return ((int) buf[0]) & 0x000000FF;
     }
 
@@ -62,8 +53,6 @@ public class NetworkParseInputStream extends DigestInputStream {
 
     @Override
     public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
-        throwIfCanceled();
-
         // キャンセルチェックを容易にするため、一度の取得を小さく保つ
         byteCount = Math.min(MAX_READ_BYTES, byteCount);
 
@@ -79,8 +68,6 @@ public class NetworkParseInputStream extends DigestInputStream {
 
     @Override
     public long skip(long byteCount) throws IOException {
-        throwIfCanceled();
-
         if (byteCount < 0) {
             throw new UnsupportedOperationException();
         }
@@ -90,7 +77,6 @@ public class NetworkParseInputStream extends DigestInputStream {
         int sumSkip = 0;
         // 指定量を読み込むことでスキップ扱いとする
         while ((count = read(temp, 0, Math.min(temp.length, (int) byteCount - sumSkip))) > 0 && (sumSkip < byteCount)) {
-            throwIfCanceled();
             onDownloadStep(temp, 0, count);
             sumSkip += count;
         }
@@ -99,7 +85,6 @@ public class NetworkParseInputStream extends DigestInputStream {
 
     @Override
     public int available() throws IOException {
-        throwIfCanceled();
         return in.available();
     }
 
