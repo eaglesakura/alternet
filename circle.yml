@@ -18,6 +18,7 @@ dependencies:
 test:
   override:
     - sh -c "$(curl -fsSL https://raw.githubusercontent.com/eaglesakura/build-dependencies/master/circleci/build-test.sh)"
+
 deployment:
   release:
     tag: /^v[0-9]\..*$/

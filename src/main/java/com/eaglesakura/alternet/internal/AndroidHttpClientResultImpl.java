@@ -85,7 +85,7 @@ public class AndroidHttpClientResultImpl<T> extends HttpResult<T> {
         }
     }
 
-    private void setRequestHeaders(HttpURLConnection connection) throws Throwable {
+    private void setRequestHeaders(HttpURLConnection connection) throws Exception {
         CollectionUtil.each(mRequest.getHeader().listHeaderKeyValues(), it -> {
             connection.addRequestProperty(it.first, it.second);
         });
@@ -147,7 +147,7 @@ public class AndroidHttpClientResultImpl<T> extends HttpResult<T> {
     /**
      * ヘッダを解析する
      */
-    private void parseResponseHeader(HttpURLConnection connection) throws Throwable {
+    private void parseResponseHeader(HttpURLConnection connection) throws Exception {
         CollectionUtil.each(connection.getHeaderFields(), (key, value) -> {
             if (CollectionUtil.isEmpty(value)) {
                 return;
@@ -205,7 +205,8 @@ public class AndroidHttpClientResultImpl<T> extends HttpResult<T> {
 
             // コンテンツのパースを行わせる
             try {
-                result = parseFromStream(callback, getResponseHeader(), readContent, cacheWriter, digest);
+                HttpHeader responseHeader = getResponseHeader();
+                result = parseFromStream(callback, responseHeader, readContent, cacheWriter, digest);
                 return result;
             } catch (IOException e) {
                 throw e;
@@ -221,7 +222,7 @@ public class AndroidHttpClientResultImpl<T> extends HttpResult<T> {
             throw e;
         } catch (IOException e) {
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new IOException(e);
         } finally {
             IOUtil.close(readContent);
